@@ -1,0 +1,276 @@
+{
+	"info": {
+		"_postman_id": "ba5b0940-40e3-47d7-abe9-ad036029d4a5",
+		"name": "Prueba evertec",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "List orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8000/api/orders",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code==201){",
+									"    let resp = pm.response.json();",
+									"    let lastOrder = resp.uuid;",
+									"    let lastOrderId = resp.id;",
+									"    pm.environment.set('lastOrder', lastOrder)",
+									"    pm.environment.set('lastOrderId', lastOrderId)",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "customer_name",
+									"value": "Juan felipe",
+									"type": "text"
+								},
+								{
+									"key": "customer_email",
+									"value": "ospinafelipe17@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "customer_mobile",
+									"value": "3014735995",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8000/api/orders",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create order prducts",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "order_id",
+									"value": "{{lastOrderId}}",
+									"type": "text"
+								},
+								{
+									"key": "product_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "20",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8000/api/ordersproducts",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"ordersproducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List order products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8000/api/ordersproducts",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"ordersproducts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pay transaction",
+			"item": [
+				{
+					"name": "Generate transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code==201){",
+									"    let resp = pm.response.json();",
+									"    let processUrl = resp.processUrl;",
+									"    pm.environment.set('processUrl', processUrl)",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "localhost:8000/api/transaction/session?order={{lastOrder}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"transaction",
+								"session"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "{{lastOrder}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get information Transaction",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "localhost:8000/api/transaction/status?order={{lastOrder}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"transaction",
+								"status"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "{{lastOrder}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
